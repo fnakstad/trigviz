@@ -34,7 +34,5 @@
     to learn how to build Svelte apps.
   </p>
 
-  <svg>
-    <Triangle />
-  </svg>
+  <Triangle />
 </main>
