@@ -1,23 +1,11 @@
 <script lang="ts">
+  import { Line, Angle } from "./models";
+  import AngleIndicator from "./Angleindicator.svelte";
+
+  // TODO: import this from models instead
   interface Vertex {
     x: number;
     y: number;
-  }
-
-  class Line {
-    p1: Vertex;
-    p2: Vertex;
-
-    constructor(p1: Vertex, p2: Vertex) {
-      this.p1 = p1;
-      this.p2 = p2;
-    }
-
-    length(): number {
-      return Math.sqrt(
-        Math.pow(this.p1.x - this.p2.x, 2) + Math.pow(this.p1.y - this.p2.y, 2)
-      );
-    }
   }
 
   const vertices: Vertex[] = [
@@ -33,20 +21,24 @@
     return new Line({ x: v.x, y: v.y }, { x: arr[nexti].x, y: arr[nexti].y });
   });
 
-  const angles: number[] = lines.map((l, i, arr) => {
-    // Find angle opposite current line using law of cosines (https://www.mathsisfun.com/algebra/trig-cosine-law.html)
+  const angles: Angle[] = lines.map((l, i, arr) => {
+    // Find angle opposite current line
+    // using law of cosines (https://www.mathsisfun.com/algebra/trig-cosine-law.html)
     // c^2 = a^2 + b^2 − 2ab cos(C)
     // => C = acos( (a^2+b^2-c^2) / 2*a*b )
+
     const ai: number = i < arr.length - 1 ? i + 1 : 0;
     const bi: number = ai < arr.length - 1 ? ai + 1 : 0;
 
-    const a = arr[ai].length();
-    const b = arr[bi].length();
-    const c = l.length();
+    // const a = arr[ai].length();
+    // const b = arr[bi].length();
+    // const c = l.length();
 
-    return Math.acos(
-      (Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2 * a * b)
-    );
+    // return Math.acos(
+    //   (Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2 * a * b)
+    // );
+
+    return new Angle(arr[ai], arr[bi]);
   });
 
   //$: const lines: number[] = vertices.map(v => v.x);
@@ -62,9 +54,8 @@
       <line x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} stroke="black" />
     {/each}
 
-    <!-- {#each angles as angle}
-      // TODO: separate component
-      <line x1={} stroke="red"></line>
+    <!-- {#each angles as a}
+      <AngleIndicator angle={a} />
     {/each} -->
   </g>
 </svg>
